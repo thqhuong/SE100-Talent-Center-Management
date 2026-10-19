@@ -1,0 +1,16 @@
+flowchart LR
+  A["Mở lớp và xếp đủ lịch"] --> B["Lập ghi danh Chờ thanh toán"]
+  B --> C{"Còn hợp lệ trước nhận tiền?"}
+  C -->|"Hợp lệ"| D["Nhận tiền và xác nhận thu"]
+  C -->|"Không hợp lệ"| X["Chọn lớp khác"]
+  X --> B
+  D --> E{"Lưu hợp lệ và thành công?"}
+  E -->|"Có"| F["Phiếu thu và kích hoạt ghi danh cùng giao dịch"]
+  E -->|"Không, đã nhận tiền"| P["Ghi sổ tiền chờ xử lý"]
+  P --> Q["Quản lý xác nhận ghi nhận lại hoặc trả tiền thủ công"]
+  Q -->|"Đã trả lại"| R["Đối chiếu báo cáo học phí và tiền chờ"]
+  Q -->|"Ghi nhận lại đủ điều kiện"| F
+  F --> G["Học theo lịch và chốt điểm danh"]
+  G --> R
+  G -->|"Vắng có phép đã duyệt"| H["Tạo quyền bù, bố trí và chốt lượt bù"]
+  H --> R

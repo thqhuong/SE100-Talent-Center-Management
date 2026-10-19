@@ -1,0 +1,401 @@
+# Báo cáo tiến độ lần 1 SE100
+## Phần mềm quản lý trung tâm dạy năng khiếu
+
+**Trường:** Trường Đại học Công nghệ Thông tin, ĐHQG TP Hồ Chí Minh
+**Môn học:** Phương pháp phát triển phần mềm hướng đối tượng
+**Nội dung:** Xác định yêu cầu đề tài và đánh giá tính khả thi
+**Ngày cập nhật:** 14/10/2026
+
+| Thành viên | MSSV | Vai trò |
+| --- | --- | --- |
+| Trần Hữu Quốc Hướng | 24520644 | Trưởng nhóm |
+| Nguyễn Tuấn Khang | 24520763 | Thành viên |
+| Nguyễn Lê Đức Huy | 24520680 | Thành viên |
+| Dương Nguyễn Phú Quý | 24521489 | Thành viên |
+| Nguyễn Văn Hoàng | 23520355 | Thành viên |
+| Đào Phúc Đại | 24520244 | Thành viên |
+
+**Phương án đề xuất.** Ứng dụng web nội bộ cho một chi nhánh, ba vai trò, lớp theo khóa có số buổi cố định. Luồng trọng tâm gồm mở lớp, ghi danh, thu học phí, xếp lịch, điểm danh và học bù. Nội dung là kết quả phân tích sơ bộ; chính sách cần được xác nhận khi khảo sát trung tâm.
+
+[[qr:https://docs.google.com/forms/d/e/1FAIpQLSenTD2JN9DCcaVJOOXoAiWOsRG7jEftdgfszZExJ_lw_65Rvg/viewform?usp=header]]
+
+<!-- page -->
+# Mục lục
+[[TOC]]
+
+**Dùng khi báo cáo trước lớp.** Trình bày Chương 1 đến Chương 5 theo thứ tự: bài toán và phạm vi, tác nhân và luồng, các ngoại lệ, mô hình sơ bộ, tính khả thi và góp ý. Phụ lục chứa quy tắc, yêu cầu và Use Case để đối chiếu khi trả lời câu hỏi.
+
+<!-- page -->
+# Chương 1 Tổng quan đề tài
+## 1.1 Bối cảnh và hoạt động cốt lõi
+
+Trung tâm tổ chức lớp âm nhạc, mỹ thuật, thể thao hoặc kỹ năng theo môn và cấp độ. Hoạt động cốt lõi là tiếp nhận học viên, tổ chức lớp và lịch, thu học phí, theo dõi từng buổi học và giải quyết học bù. Phòng học cùng thiết bị cố định phải phù hợp môn; giảng viên cần chuyên môn phù hợp lớp.
+
+Tài liệu định hướng mô tả việc dùng sổ và bảng tính rời rạc, dẫn đến khó đối chiếu sĩ số, lịch và học phí. Đây là bối cảnh phân tích từ tài liệu hiện có; nhóm chưa có biên bản khảo sát trung tâm để xác nhận tần suất hoặc mức độ của các vấn đề.
+
+## 1.2 Phạm vi và nhu cầu phần mềm
+
+Nhóm đề xuất một chi nhánh, ứng dụng nội bộ, quản lý lớp theo khóa trọn gói và thu đủ học phí một lần. Khóa là mẫu chương trình; lớp là đợt tổ chức cụ thể; buổi là lần học có thời gian, phòng và giảng viên. Lớp một kèm một dùng cùng mô hình với sĩ số tối đa bằng 1.
+
+| Trong phạm vi phiên bản đầu | Ngoài phạm vi phiên bản đầu |
+| --- | --- |
+| Hồ sơ học viên và người liên hệ; môn, cấp độ, khóa, phòng và giảng viên. | Nhiều chi nhánh; cổng phụ huynh, ứng dụng di động. |
+| Mở lớp, xếp từng buổi; kiểm tra trùng phòng, giảng viên và học viên. | Tối ưu lịch tự động; quản lý kho và bảo trì thiết bị. |
+| Ghi danh trước khóa; học phí trọn khóa; phiếu thu nội bộ và sổ tiền chờ xử lý. | Thu nhiều đợt, khuyến mãi, cổng thanh toán, kế toán và hóa đơn điện tử. |
+| Điểm danh, nhận xét, nghỉ có phép, học bù; báo cáo sĩ số, chuyên cần và thu phí. | Lương, bảo lưu dài hạn, chuyển lớp/hoàn phí tự động, cấp chứng chỉ. |
+
+## 1.3 Mục tiêu cần kiểm chứng
+
+Không vượt sĩ số hoặc trùng lịch khi thao tác đồng thời; học phí và khoản nhận tiền đều đối chiếu được; điểm danh lớp gốc tách khỏi lượt học bù; người dùng chỉ xem và sửa dữ liệu đúng quyền. Những mục tiêu này được cụ thể hóa thành 18 FR, 8 NFR và 12 BR trong phụ lục, chưa phải kết quả kiểm thử.
+
+<!-- page -->
+# Chương 2 Phân tích yêu cầu và nghiệp vụ
+## 2.1 Tác nhân và quyền sử dụng
+
+Ba tác nhân trực tiếp là Quản lý, Giáo vụ và Giảng viên. Học viên, phụ huynh là bên tham gia nghiệp vụ qua Giáo vụ; chưa đăng nhập vào phần mềm. Quản lý có các quyền của Giáo vụ, cộng quyền quản trị và sửa sai theo quy tắc.
+
+[[diagram:use_cases.png|Hình 1 Tác nhân và các nhóm Use Case trong phạm vi]]
+
+| Vai trò | Giới hạn quyền cần chú ý |
+| --- | --- |
+| Quản lý | Quản trị tài khoản, danh mục; xác nhận xử lý khoản chờ và thay chứng từ; xem toàn bộ báo cáo; sửa điểm danh có lý do. |
+| Giáo vụ | Hồ sơ, lớp, lịch, ghi danh, thu phí, duyệt nghỉ, bố trí bù; tạo/xem khoản chờ. Không tự sửa phiếu đã xác nhận. |
+| Giảng viên | Xem lịch, chốt điểm danh, nhận xét và xem chuyên cần buổi/lớp được phân công. Không xếp lịch, bố trí bù hoặc xem học phí. |
+
+Hình dùng đường liền cho liên kết tác nhân và nghiệp vụ. Mũi tên tam giác rỗng hướng từ Quản lý đến Giáo vụ biểu diễn kế thừa quyền. Không dùng liên kết này để biểu diễn thứ tự xử lý; quyền chi tiết được kiểm tra ở máy chủ theo BR04.
+
+<!-- page -->
+## 2.2 Luồng nghiệp vụ từ đầu đến cuối
+
+Giáo vụ mở lớp có đủ lịch, tư vấn và lập ghi danh Chờ thanh toán. Hồ sơ này không giữ chỗ. Khi thu, cần kiểm tra lại điều kiện trước nhận tiền và tại lúc ghi dữ liệu. Một giao dịch phải đồng thời lập phiếu thu và kích hoạt ghi danh; sau đó giảng viên theo dõi việc học, Giáo vụ bố trí bù và đối chiếu báo cáo.
+
+[[diagram:workflow.png|Hình 2 Luồng chính và nhánh tiền đã nhận nhưng chưa kích hoạt]]
+
+Tiền mặt hoặc chuyển khoản đã nhận không thể hoàn tác bằng giao dịch CSDL. Nếu ghi nhận thất bại, Giáo vụ ghi sổ khoản chờ xử lý; Quản lý xác nhận ghi nhận lại khi đủ điều kiện hoặc xác nhận đã trả tiền thủ công. Khi mất mạng, ghi sổ giao nhận và đối chiếu khi kết nối lại, dùng cùng mã khoản nhận để tránh ghi trùng.
+
+**Ví dụ:** Hai nhân viên cùng xác nhận chỗ cuối; chỉ một ghi danh được kích hoạt. Nếu người còn lại đã nhận tiền, khoản đó xuất hiện ở sổ chờ, chưa có phiếu học phí. Báo cáo tách Học phí ghi nhận, Tiền đã nhận chưa phân bổ và Tiền trả lại; không bỏ sót hoặc cộng trùng khoản tiền.
+
+<!-- page -->
+## 2.3 Ràng buộc và kịch bản ngoại lệ
+
+| Ràng buộc hoặc ngoại lệ | Cách xử lý đề xuất |
+| --- | --- |
+| Sĩ số và chỗ cuối | Đếm mọi học viên chính thức cùng lượt bù đã bố trí; không lấy chỗ của người dự kiến vắng. Không vượt giới hạn lớp hoặc sức chứa phòng. |
+| Trùng lịch | Hai khoảng giao nhau khi bắt đầu A nhỏ hơn kết thúc B và bắt đầu B nhỏ hơn kết thúc A. Buổi liền nhau được phép; kiểm tra lại ở lúc ghi. |
+| Đổi hoặc hủy buổi | Chỉ trước giờ bắt đầu. Lớp tiếp tục học phải có buổi thay thế liên kết; hủy toàn lớp chưa thu không cần buổi thay thế. |
+| Thu sai hoặc mất phản hồi | Không kích hoạt khi số tiền khác học phí chốt. Tiền đã nhận phải vào sổ chờ; mất phản hồi phải tra cứu kết quả trước khi ghi nhận lại. |
+| Vắng có phép và học bù | Giáo vụ duyệt trước chốt điểm danh. Một lần vắng gốc có tối đa một quyền; một quyền có tối đa một lượt bù đang bố trí và một lượt sử dụng. |
+| Hủy hoặc vắng buổi bù | Không tính đã học; bố trí lại nếu còn hạn. Vắng buổi bù không sinh quyền bù mới. |
+| Sửa điểm danh và phiếu thu | Có lý do và lịch sử; không xóa chứng từ. Chặn sửa gốc đã có bù sử dụng và sửa lượt bù đã chốt trong phiên bản đầu. |
+
+## 2.4 Thuộc tính biến đổi theo thời gian
+
+| Đối tượng | Vòng đời đề xuất |
+| --- | --- |
+| Lớp và ghi danh | Lớp Dự kiến → Mở tuyển sinh → Đang học theo giờ buổi đầu → Hoàn thành sau đủ N buổi chốt. Ghi danh Chờ thanh toán → Có hiệu lực cùng phiếu thu → Hoàn thành theo lớp. |
+| Buổi và điểm danh | Buổi Đã lên lịch → Hoàn thành sau giờ kết thúc và chốt; chỉ Hủy trước bắt đầu. Điểm danh Nháp → Đã chốt, sửa gốc có lưu vết. |
+| Quyền và lượt bù | Quyền Chờ bố trí → Đã bố trí → Đã sử dụng khi Có mặt đã chốt; vắng/hủy giải phóng lịch nếu còn hạn; quá hạn Hết hạn nếu không có lượt đã diễn ra chờ chốt; lượt kết thúc đúng hạn vẫn được chốt muộn. |
+| Chứng từ và khoản chờ | Phiếu Hiệu lực → Được thay thế cùng số tiền và ngày thu. Khoản chờ → Đã ghi nhận hoặc Đã trả lại; giữ lịch sử và chứng cứ. |
+
+Học phí, số buổi của lớp và học phí ghi danh được chốt, không đổi theo giá danh mục. Hạn bù đề xuất là 30 ngày sau ngày cuối dự kiến khi cấp; kéo dài lớp chỉ gia hạn quyền chưa sử dụng, không rút ngắn hạn đã cấp. Các chính sách này cần xác nhận với trung tâm.
+
+<!-- page -->
+# Chương 3 Mô hình và định hướng thiết kế
+## 3.1 Đối tượng và dữ liệu cần thu thập
+
+| Nhóm đối tượng | Dữ liệu chính |
+| --- | --- |
+| Học viên và người liên hệ | Mã học viên, họ tên, ngày sinh; họ tên, quan hệ, số điện thoại người liên hệ. Một liên hệ có thể dùng cho nhiều học viên. |
+| Môn, khóa, lớp và buổi | Môn, cấp độ; số buổi, học phí; sĩ số lớp; thời gian từng buổi; phòng có sức chứa/môn đáp ứng, giảng viên có chuyên môn/môn đáp ứng. |
+| Ghi danh và thu phí | Học viên, lớp, học phí chốt; phiếu thu, số tiền, thời điểm thực nhận, mã đối chiếu, phương thức và người thu. |
+| Nghỉ, điểm danh và bù | Đề nghị và kết quả duyệt; kết quả buổi gốc; quyền bù, hạn, buổi đích và kết quả lượt bù. |
+| Tài khoản và lịch sử | Vai trò, trạng thái, mật khẩu băm; người thao tác, thời điểm, trước/sau và lý do sửa. |
+
+[[diagram:domain_finance.png|Hình 3 Mô hình miền ghi danh và thu phí ở mức sơ bộ]]
+
+Mỗi ghi danh thuộc một học viên và một lớp. Receipt lưu cả phiếu cũ, nhưng mỗi ghi danh đã thu chỉ có một phiếu hiệu lực. PaymentIncident có thể liên kết phiếu sau xử lý; không đại diện khoản thu thứ hai. Khi xử lý thành công, liên kết phiếu và đóng khoản chờ trong cùng giao dịch.
+
+<!-- page -->
+## 3.2 Mô hình lớp học và học bù
+
+[[diagram:domain_learning.png|Hình 4 Mô hình miền lịch học điểm danh và học bù ở mức sơ bộ]]
+
+Mỗi Lesson thuộc một ClassGroup, dùng một Room và một Instructor. Attendance chỉ liên kết Enrollment với Lesson của chính lớp đã ghi danh. LeaveRequest thuộc một lần đề nghị nghỉ cho cặp ghi danh và buổi gốc; chỉ tối đa một đề nghị hiệu lực cho cặp này.
+
+MakeupEntitlement phát sinh từ Attendance Vắng có phép đã chốt. MakeupBooking liên kết quyền với Lesson đích; kết quả tham dự lưu trên lượt bù, tách khỏi Attendance lớp gốc. Sơ đồ thể hiện số bản ghi lịch sử; ràng buộc “một quyền đang bố trí” và “một phiếu hiệu lực” không thể suy ra chỉ từ bội số 0..*.
+
+## 3.3 Kiến trúc và giao diện dự kiến
+
+Nhóm đề xuất ứng dụng web nguyên khối phân tầng: Giao diện → Dịch vụ nghiệp vụ → Truy cập dữ liệu → CSDL quan hệ. Ràng buộc lịch, sĩ số, giao dịch tiền và phân quyền phải xử lý ở máy chủ; giao diện hỗ trợ nhập liệu và phản hồi.
+
+Đợt 2 sẽ cụ thể hóa màn hình Hồ sơ, Lớp và lịch, Ghi danh và phiếu thu, Điểm danh, Nghỉ và học bù, Khoản tiền chờ xử lý, Báo cáo và Quản trị. Mô hình trong lần 1 là mô hình miền sơ bộ; thuộc tính, phương thức, ERD, Screen Flow và kiến trúc triển khai chi tiết sẽ hoàn thiện ở giai đoạn sau.
+
+<!-- page -->
+# Chương 4 Tính khả thi và kế hoạch thực hiện
+## 4.1 Đánh giá tính khả thi
+
+| Khía cạnh | Đánh giá và điều kiện thực hiện |
+| --- | --- |
+| Nghiệp vụ | Có luồng lõi rõ, nhưng cần xác nhận thu trọn khóa, không giữ chỗ, hạn bù và chứng từ với đại diện trung tâm. |
+| Kỹ thuật | Web phân tầng và CSDL quan hệ phù hợp. Khó nhất là tranh chỗ/lịch, chống lặp và quan hệ điểm danh với học bù. |
+| Nhân lực và tiến độ | Sáu thành viên, Quốc Hướng điều phối. Chưa có hạn báo cáo trong tài liệu; chốt lịch theo lớp và triển khai theo mốc đầu ra. |
+| Chi phí và demo | Ưu tiên công cụ sẵn có, dữ liệu mẫu và demo local. Công nghệ, chi phí hạ tầng cụ thể chưa được nhóm xác nhận. |
+
+## 4.2 Mốc công việc và phân công
+
+Thứ tự thực hiện: xác nhận chính sách và SRS → Activity/Sequence cho Use Case lõi → thiết kế lớp, dữ liệu và prototype → triển khai luồng xuyên suốt → kiểm thử và đóng gói demo. Component và Deployment Diagram sẽ lập khi chốt công nghệ.
+
+Phân công dưới đây là kế hoạch do báo cáo đề xuất, không phải xác nhận công việc đã hoàn thành. Trưởng nhóm điều phối scope và tổng hợp tài liệu; các thành viên chịu trách nhiệm đầu ra riêng và rà soát chéo.
+
+| Thành viên | Đầu ra chính | Người rà soát |
+| --- | --- | --- |
+| Trần Hữu Quốc Hướng | Scope, quản lý thay đổi, ma trận truy vết; tổng hợp SRS, slide và kết quả góp ý. | Nguyễn Tuấn Khang |
+| Nguyễn Tuấn Khang | Actor, lớp/lịch; UC02, Activity/Sequence và prototype lớp/lịch. | Dương Nguyễn Phú Quý |
+| Nguyễn Lê Đức Huy | Ghi danh, học phí; UC01, chứng từ mẫu và ngoại lệ giao dịch thu. | Nguyễn Văn Hoàng |
+| Dương Nguyễn Phú Quý | Điểm danh, nghỉ/học bù; UC03–UC04 và biến đổi trạng thái. | Nguyễn Lê Đức Huy |
+| Nguyễn Văn Hoàng | Đối tượng dữ liệu, mô hình miền, dữ liệu mẫu và báo cáo UC05. | Đào Phúc Đại |
+| Đào Phúc Đại | NFR, kịch bản TC01–TC12, kiểm tra tính nhất quán và biểu mẫu góp ý. | Trần Hữu Quốc Hướng |
+
+<!-- page -->
+# Chương 5 Kết quả và nội dung xin góp ý
+## 5.1 Kết quả của lần báo cáo này
+
+Nhóm đã lập phương án phạm vi, ba tác nhân trực tiếp, luồng nghiệp vụ và ngoại lệ; xác định 18 yêu cầu chức năng, 8 yêu cầu phi chức năng, 12 quy tắc và 5 Use Case trọng tâm. Bốn hình mô tả vai trò, luồng và mô hình miền giúp đối chiếu nội dung. Các mã TC trong phụ lục là kịch bản dự kiến, chưa phải test đã chạy.
+
+Chưa có biên bản khảo sát thực tế hoặc bằng chứng ứng dụng chạy được trong hồ sơ của báo cáo. Việc cần làm tiếp theo là xác nhận chính sách, chốt đặc tả, hoàn thiện UML và prototype cho lần 2. Không trình bày các đầu ra dự kiến thành kết quả đã triển khai.
+
+## 5.2 Rủi ro và hướng xử lý
+
+| Rủi ro | Hướng xử lý |
+| --- | --- |
+| Phạm vi khác cách vận hành thực tế | Khảo sát các quy tắc đang giả định; trưởng nhóm tổng hợp tác động trước khi đổi phạm vi. |
+| Ghi nhận tiền hoặc lịch không nhất quán | Kiểm thử giao dịch, thao tác đồng thời, mất phản hồi và sổ chờ; đối chiếu dữ liệu nguồn. |
+| Học bù không có lớp phù hợp | Giữ quyền chưa sử dụng và cảnh báo Giáo vụ; không tự khẳng định đã học hoặc hoàn phí. |
+| Khó tích hợp phần việc nhóm | Dùng chung thuật ngữ và mã yêu cầu; mỗi hiện vật có người rà soát chéo. |
+
+## 5.3 Câu hỏi góp ý theo thứ tự trình bày
+
+1. Phạm vi một chi nhánh, khóa trọn gói có phù hợp đồ án? Nghiệp vụ nào đang thiếu hoặc thừa?
+2. Tác nhân và quyền ở Hình 1 có hợp lý? Học viên/phụ huynh tương tác qua Giáo vụ có đủ cho phiên bản đầu?
+3. Luồng ghi danh, thu tiền và sổ chờ có còn tình huống bỏ sót hoặc đếm trùng tiền?
+4. Ràng buộc lịch, sĩ số, nghỉ và học bù còn mâu thuẫn hoặc thiếu ngoại lệ nào?
+5. Mô hình miền và kế hoạch khả thi chưa? Nên ưu tiên phần nào cho prototype lần 2?
+
+Người góp ý dùng QR ở trang đầu. Nhóm cần ghi nhận họ tên, MSSV, nhóm và việc có mặt tại lớp; trưởng nhóm chia sẻ kết quả cho giảng viên và đánh dấu các góp ý hữu ích. Biểu mẫu góp ý phục vụ phản biện báo cáo, tách biệt với khảo sát yêu cầu của trung tâm.
+
+<!-- page -->
+# Tài liệu tham khảo
+
+1. SE100.md. Đề cương môn Phương pháp phát triển phần mềm hướng đối tượng. Tài liệu nội bộ học phần.
+2. Gợi ý nội dung báo cáo tiến độ.md. Hướng dẫn lần 1 về yêu cầu, tính khả thi, ràng buộc và ngoại lệ; hướng dẫn thu góp ý và khung báo cáo 5 chương.
+3. docs/DE_TAI.md. Khảo sát sơ bộ và định hướng đề tài Phần mềm quản lý trung tâm dạy năng khiếu. Ngày 22/09/2026.
+
+**Câu hỏi khảo sát ưu tiên.** Trung tâm có thu trọn khóa, nhận giữa khóa hoặc giữ chỗ trước thanh toán không? Ai xác nhận tiền và xử lý tiền nhận sai? Nghỉ có phép được duyệt theo điều kiện nào, hạn bù và tình huống không có lớp bù phù hợp ra sao? Ai có quyền đổi lịch, sửa điểm danh và xem thông tin học viên? Biểu mẫu chứng từ thực tế có những trường nào bắt buộc?
+
+<!-- page -->
+# Phụ lục A Quy tắc nghiệp vụ
+## A.1 Lớp lịch và ghi danh
+
+Các quy tắc BR01–BR12 là chính sách đề xuất cho nguyên mẫu. Chúng cần được rà soát khi khảo sát thực tế; không coi các con số hoặc cách xử lý là quy định đã ban hành của một trung tâm.
+
+**BR01 — Đơn vị vận hành.** Một chi nhánh dùng múi giờ Asia/Ho_Chi_Minh và tiền VND. Lớp lưu số buổi và học phí của khóa khi tạo; không tự đổi khi danh mục khóa được sửa. Trước mở tuyển sinh, lớp phải có đúng N buổi chưa hủy theo số buổi đã chốt. Sau khi mở, không thêm buổi ngoài số N; hủy buổi lẻ của lớp còn tiếp tục và tạo buổi thay thế phải cùng một giao dịch. Chỉ tuyển trước giờ buổi đầu. Khi đến giờ buổi đầu, hệ thống tự chuyển lớp sang Đang học và hủy ghi danh Chờ thanh toán chưa có phiếu thu học phí hiệu lực, giữ lịch sử; khoản tiền chờ xử lý vẫn được theo dõi riêng. Không nhận tiền hoặc ghi danh mới sau thời điểm này. Điều kiện tuổi và trình độ chỉ áp dụng nếu được khai báo, không tự suy diễn từ ngày sinh. Giảng viên và phòng khai báo danh sách môn đáp ứng; khi xếp lịch phải cùng môn của lớp, phòng có sức chứa đủ và thiết bị cố định đáp ứng môn.
+
+**BR02 — Sĩ số.** Ghi danh Có hiệu lực mới chiếm chỗ chính thức. Hồ sơ Chờ thanh toán không giữ chỗ. Toàn bộ học viên chính thức, kể cả người dự kiến vắng, cộng các lượt bù đã bố trí tại một buổi không vượt giới hạn lớp và sức chứa phòng. Lớp một kèm một có giới hạn 1.
+
+**BR03 — Xung đột lịch.** Hai khoảng thời gian giao nhau khi bắt đầu A nhỏ hơn kết thúc B và bắt đầu B nhỏ hơn kết thúc A. Các buổi liền nhau được phép. Kiểm tra phòng, giảng viên, học viên và các lịch bù tại lúc lưu, kể cả thao tác đồng thời; buổi hủy không chiếm tài nguyên.
+
+**BR04 — Phân quyền.** Quyền được kiểm tra ở máy chủ. Giảng viên chỉ truy cập lớp và buổi được phân công; Giáo vụ không quản lý tài khoản hoặc tự thay chứng từ đã xác nhận. Quản lý có các quyền nghiệp vụ của Giáo vụ, được quản trị tài khoản, danh mục, xem báo cáo và duyệt sửa sai có lưu vết.
+
+**BR05 — Kích hoạt ghi danh.** Chỉ ghi danh vào lớp Mở tuyển sinh trước thời điểm bắt đầu buổi đầu tiên. Một học viên chỉ có một ghi danh chưa hủy trong cùng lớp. Khi thu đủ, hệ thống kiểm tra lại chỗ, lịch và trạng thái rồi kích hoạt. Hủy chỉ áp dụng cho ghi danh chưa có phiếu thu học phí hiệu lực; khoản chờ giữ liên kết sau hủy. Khi lớp đã bắt đầu, khoản chờ chỉ được xử lý trả lại thủ công, không kích hoạt muộn; hủy ghi danh đã thu và hoàn tiền nằm ngoài phạm vi.
+
+**BR06 — Học phí đã chốt.** Khi tạo ghi danh, hệ thống lưu học phí của lớp tại thời điểm đó. Đổi biểu phí không sửa số tiền đã chốt. Phiên bản đầu nhận đúng toàn bộ khoản phải thu một lần; không thu một phần, thu thừa hoặc áp dụng giảm giá.
+
+<!-- page -->
+## A.2 Thu phí điểm danh và học bù
+
+**BR07 — Giao dịch thu phí và tiền chờ xử lý.** Lập phiếu thu và kích hoạt ghi danh phải cùng thành công hoặc cùng thất bại. Mỗi lần gửi có định danh chống lặp. Gửi lại cùng thao tác không được tạo phiếu thứ hai; mỗi ghi danh chỉ có một phiếu thu hiệu lực cho toàn bộ học phí. Kiểm tra điều kiện trước khi nhận tiền và kiểm tra lại lúc lưu. Nếu đã nhận tiền nhưng không kích hoạt được, Giáo vụ ghi PaymentIncident riêng với số tiền thực nhận, thời điểm, bằng chứng và lý do; không coi đó là phiếu thu học phí. Mất mạng phải ghi sổ giao nhận và nhập đối chiếu khi có kết nối. Quản lý xác nhận xử lý: ghi nhận lại chỉ khi đủ mọi điều kiện, đồng thời liên kết phiếu thu và đóng khoản chờ trong cùng giao dịch; hoặc xác nhận đã trả tiền ngoài phần mềm, lưu bằng chứng, thời điểm và người xử lý. Mỗi khoản nhận tiền có mã đối chiếu duy nhất; gửi lại hoặc nhập từ sổ không được ghi nhận hai lần.
+
+**BR08 — Sửa sai chứng từ.** Phiếu xác nhận không bị sửa hoặc xóa trực tiếp. Quản lý chỉ được lập phiếu thay thế cùng ghi danh, cùng số tiền và ngày thu thực tế để sửa phương thức hoặc ghi chú; phải ghi lý do, giữ phiếu gốc và liên kết thay thế. Thao tác thay thế là một giao dịch, không đổi tình trạng ghi danh hay tổng học phí ghi nhận. Đổi số tiền, đổi học viên hoặc hoàn tiền nằm ngoài phiên bản đầu.
+
+**BR09 — Buổi và điểm danh.** Buổi có giờ kết thúc sau giờ bắt đầu; chỉ chốt điểm danh sau giờ kết thúc. Mỗi học viên có một kết quả cho một buổi; nháp chưa cập nhật thống kê. Buổi hủy không có điểm danh hợp lệ; buổi hoàn thành không được đổi lịch. Chỉ đổi hoặc hủy lịch trước giờ bắt đầu. Với lớp tiếp tục tổ chức, mỗi buổi hủy phải có một buổi thay thế liên kết và không tạo chuỗi thay thế bị phân nhánh; hủy toàn lớp chưa thu không phải tạo buổi thay thế; lớp chỉ hoàn thành khi đúng N buổi chưa hủy đã kết thúc và chốt điểm danh. Buổi thay thế được tính trong lịch và chuyên cần, buổi hủy bị loại.
+
+**BR10 — Vắng và học bù.** Điểm danh lớp gốc có ba kết quả: Có mặt, Vắng có phép, Vắng không phép. Vắng có phép cần Giáo vụ duyệt đề nghị trước khi chốt. Mỗi cặp ghi danh và buổi gốc có tối đa một quyền bù; chỉ lượt bù Có mặt đã chốt mới sử dụng quyền. Lượt bù chỉ có kết quả Có mặt hoặc Vắng; vắng bù không tạo quyền bù mới. Học bù liên kết với lần vắng của một học viên, không phải kết quả điểm danh thứ tư.
+
+**BR11 — Bố trí và sửa học bù.** Buổi bù cùng môn, cấp độ, còn chỗ, không trùng lịch; chưa bắt đầu khi bố trí và kết thúc không quá hạn bù. Hạn đề xuất là 30 ngày sau ngày kết thúc dự kiến của lớp gốc tại lúc cấp quyền. Nếu lớp được kéo dài, cập nhật mọi quyền chưa sử dụng sang hạn mới khi hạn mới muộn hơn; không rút ngắn hạn đã cấp. Cập nhật hạn và đổi lịch cùng một giao dịch; quyền Hết hạn được khôi phục Chờ bố trí nếu hạn mới chưa qua. Lượt bù đã diễn ra và kết thúc trong hạn vẫn được chốt muộn; xét hạn theo giờ kết thúc buổi đích, không theo giờ nhập điểm danh. Khi hết hạn nhưng còn lượt bù đã diễn ra chờ chốt, không cho bố trí mới và giữ lượt đó chờ xác nhận. Đây là tham số cần xác nhận. Hủy hoặc vắng bù cho phép bố trí lại trước hạn, không giữ hai lịch bù hiệu lực. Ghi danh hoàn thành vẫn dùng quyền còn hạn. Kết quả lượt bù đã chốt không sửa qua phần mềm; sửa điểm danh gốc đã có bù sử dụng cũng bị chặn để Quản lý xử lý thủ công.
+
+**BR12 — Lịch sử và báo cáo.** Hồ sơ đã được tham chiếu chỉ được ngừng hoạt động. Sửa điểm danh phải có lý do, giữ giá trị cũ và tính lại thống kê; không tạo bản ghi thứ hai. Học phí ghi nhận tính từ phiếu hiệu lực theo ngày thu gốc. Chuyên cần lớp gốc bằng Có mặt chia tổng buổi gốc chưa hủy đã chốt của học viên; tỷ lệ hiển thị Không có dữ liệu nếu mẫu số bằng 0. Lượt bù được báo cáo riêng, không cộng hai lần vào tử số.
+
+<!-- page -->
+# Phụ lục B Yêu cầu chức năng
+## B.1 Quản trị và tuyển sinh
+
+Tất cả FR01–FR18 thuộc phạm vi phiên bản đầu. Tiêu chí chấp nhận dưới đây là điều kiện cần kiểm thử khi triển khai, chưa phải kết quả kiểm thử đã đạt.
+
+**FR01 — Đăng nhập và phân quyền.** Người dùng đăng nhập bằng tài khoản do Quản lý cấp, đăng xuất và bị chặn khi tài khoản ngừng hoạt động. Quyền theo BR04 phải áp dụng cho cả màn hình và dữ liệu máy chủ.
+**Chấp nhận:** Giảng viên truy cập dữ liệu lớp khác hoặc báo cáo học phí bị từ chối; sửa vai trò trên giao diện không tạo thêm quyền.
+
+**FR02 — Quản lý hồ sơ học viên.** Giáo vụ tạo, cập nhật, tìm kiếm học viên và người liên hệ. Học viên có mã riêng, ngày sinh không ở tương lai; có ít nhất một người liên hệ với số điện thoại.
+**Chấp nhận:** Hai học viên có thể cùng dùng một người liên hệ; thiếu tên hoặc số liên hệ không lưu được; hồ sơ đã có ghi danh không bị xóa.
+
+**FR03 — Quản lý danh mục.** Quản lý thiết lập môn, cấp độ, khóa, học phí, giảng viên và phòng. Số buổi, học phí và sức chứa phải dương; mã danh mục không trùng.
+**Chấp nhận:** Sửa học phí khóa không đổi ghi danh cũ; ngừng hoạt động giảng viên hoặc phòng không xóa lịch sử và không cho xếp lịch mới; phải bố trí lại các buổi tương lai trước khi ngừng, không làm vô hiệu lịch đang diễn ra.
+
+**FR04 — Tạo và mở lớp.** Giáo vụ tạo lớp từ khóa, khai báo sĩ số và giảng viên. Mở tuyển sinh chỉ khi lớp có đủ buổi chưa hủy, các buổi hợp lệ và không vượt sức chứa.
+**Chấp nhận:** Không mở lớp khi thiếu lịch hoặc lớp một kèm một có sĩ số 2; điều kiện không hợp lệ được chỉ rõ.
+
+**FR05 — Lập lịch từng buổi.** Giáo vụ xếp ngày giờ, phòng và giảng viên cho từng buổi; kiểm tra BR03 tại lúc lưu.
+**Chấp nhận:** Hai buổi liền nhau lưu được; hai yêu cầu đồng thời dùng cùng phòng trong giờ giao nhau chỉ một yêu cầu thành công.
+
+**FR06 — Lập ghi danh chờ thanh toán.** Giáo vụ chọn học viên và lớp, xem học phí chốt và kiểm tra điều kiện trước khi tạo hồ sơ. Ghi danh chờ thanh toán không chiếm chỗ; có thể hủy khi chưa có phiếu học phí hiệu lực, giữ liên kết và lịch sử khoản chờ nếu có.
+**Chấp nhận:** Từ chối đăng ký trùng chưa hủy, lớp đã bắt đầu hoặc lịch học viên bị xung đột; hủy ghi danh chưa có phiếu hiệu lực không sinh phiếu mới và không xóa khoản tiền chờ.
+
+<!-- page -->
+## B.2 Thu phí và điểm danh
+
+**FR07 — Thu phí và kích hoạt ghi danh.** Giáo vụ nhập đúng học phí chốt, ngày thu, phương thức Tiền mặt hoặc Chuyển khoản và xác nhận đã nhận tiền. Hệ thống kiểm tra trước khi nhận tiền và kiểm tra lại lúc lưu phiếu, kích hoạt theo BR05–BR07. Nếu đã nhận tiền nhưng giao dịch thất bại, Giáo vụ ghi khoản chờ xử lý; Quản lý xác nhận xử lý theo BR07.
+**Chấp nhận:** Thu một phần hoặc thu thừa không kích hoạt; tiền đã nhận sai số tiền phải ghi khoản chờ xử lý; hai người kích hoạt chỗ cuối chỉ một người thành công; lỗi lưu không để lại phiếu hoặc ghi danh kích hoạt một phần; gửi lại không thu lặp; khoản đã nhận nhưng chưa kích hoạt xuất hiện trong sổ chờ; xử lý lại thành công không cộng tiền hai lần.
+
+**FR08 — Xem và sửa sai phiếu thu.** Giáo vụ xem hoặc in chứng từ; Quản lý thay thế chứng từ sai theo BR08. Phiếu hiển thị học viên, lớp, số tiền, ngày thu, phương thức, người thu và mã duy nhất; ghi rõ là phiếu thu nội bộ.
+**Chấp nhận:** Thay phương thức đúng quyền giữ nguyên tổng thu và ngày thu; phiếu gốc còn trong lịch sử; đổi số tiền hoặc xóa phiếu bị từ chối.
+
+**FR09 — Theo dõi trạng thái lớp.** Lớp tự chuyển sang Đang học khi đến giờ bắt đầu buổi đầu; Giáo vụ xác nhận hoàn thành lớp; chỉ hoàn thành khi đủ số buổi của khóa đã kết thúc và chốt điểm danh, bao gồm buổi thay thế cho lịch hủy. Hủy lớp chỉ trước buổi đầu và chưa có phiếu học phí hiệu lực; hủy các buổi tương lai, giải phóng booking bù và hủy ghi danh chờ trong cùng giao dịch. Khoản tiền chờ vẫn giữ lịch sử để xử lý trả lại.
+**Chấp nhận:** Khóa 12 buổi hủy 1 buổi không được kết thúc với 11 buổi; không hoàn thành lớp còn buổi chưa chốt; quyền bù còn hạn vẫn dùng được sau khi lớp gốc hoàn thành.
+
+**FR10 — Điểm danh và nhận xét.** Giảng viên xem đúng danh sách chính thức và học viên bù của buổi được giao, lưu nháp, chốt ba kết quả chuyên cần lớp gốc, hai kết quả Có mặt/Vắng cho lượt bù và nhập nhận xét.
+**Chấp nhận:** Hồ sơ chờ thanh toán không nằm trong danh sách học; không chốt trước giờ kết thúc; chốt lại cùng dữ liệu không nhân bản điểm danh hoặc quyền bù.
+
+**FR11 — Sửa điểm danh lớp gốc có lưu vết.** Giảng viên phụ trách hoặc Quản lý được sửa kết quả lớp gốc đã chốt với lý do; lượt bù đã chốt không sửa qua chức năng này. Thống kê được tính lại; sửa làm vô hiệu quyền bù đang bố trí phải hủy lịch bù trong cùng giao dịch.
+**Chấp nhận:** Lịch sử có người sửa, thời điểm, trước và sau; điểm danh gốc đã có lượt bù sử dụng không được tự sửa sang kết quả khác.
+
+**FR12 — Duyệt đề nghị nghỉ.** Giáo vụ ghi đề nghị nghỉ theo học viên và buổi, duyệt hoặc từ chối kèm lý do. Kết quả duyệt làm căn cứ chốt Vắng có phép.
+**Chấp nhận:** Đề nghị từ chối không tạo quyền bù; mỗi cặp ghi danh và buổi gốc có tối đa một đề nghị đang hiệu lực; hai học viên vắng cùng buổi có đề nghị riêng; Vắng có phép chưa duyệt không chốt được.
+
+<!-- page -->
+## B.3 Học bù và báo cáo
+
+**FR13 — Bố trí và theo dõi học bù.** Giáo vụ xem quyền bù từ điểm danh đã chốt và chọn buổi phù hợp theo BR10–BR11. Giảng viên điểm danh lượt bù trong buổi đích; có mặt mới sử dụng quyền.
+**Chấp nhận:** Không chọn lớp sai môn, sai cấp độ, hết chỗ hoặc hết hạn; một quyền không có hai lịch bù hoạt động; vắng hoặc hủy lượt bù không được báo là đã học.
+
+**FR14 — Đổi hoặc hủy buổi chưa bắt đầu.** Giáo vụ chỉ đổi hoặc hủy trước giờ bắt đầu, kiểm tra lại toàn bộ người tham gia và lượt bù. Hủy buổi giữ lịch sử và giải phóng các lịch bù để bố trí lại.
+**Chấp nhận:** Không đổi buổi gây trùng lịch học viên hoặc dùng phòng/giảng viên không đáp ứng môn; buổi đã bắt đầu không bị đổi hoặc hủy; buổi hủy không chiếm phòng, không được điểm danh và không tính chuyên cần.
+
+**FR15 — Báo cáo sĩ số và chuyên cần.** Quản lý, Giáo vụ xem danh sách ghi danh theo trạng thái, chuyên cần lớp gốc và lượt bù theo lớp hoặc học viên. Giảng viên chỉ xem báo cáo chuyên cần lớp được giao.
+**Chấp nhận:** Chỉ số Sĩ số đang học chỉ đếm ghi danh Có hiệu lực; lớp kết thúc vẫn xem được danh sách Hoàn thành. Chuyên cần theo BR12; mẫu số 0 hiển thị Không có dữ liệu; lượt bù trình bày riêng.
+
+**FR16 — Đối chiếu học phí và khoản tiền đã nhận.** Quản lý, Giáo vụ lọc phiếu hiệu lực theo ngày thu, lớp, môn và phương thức; xem ghi danh chờ thanh toán riêng với tiền đã nhận; trình bày riêng số tiền đã nhận chưa phân bổ và tiền đã trả lại thủ công. Đối chiếu theo mã khoản nhận để tránh cộng trùng.
+**Chấp nhận:** Tổng báo cáo bằng tổng chứng từ nguồn; phiếu thay thế không cộng hai lần; không gọi tiền thu là lợi nhuận; khoản chờ không bị ẩn hoặc cộng trùng với phiếu thu sau xử lý.
+
+**FR17 — Tra cứu và xuất dữ liệu.** Người có quyền tìm theo mã hoặc tên, lọc danh sách, phân trang và xuất CSV theo đúng bộ lọc. Dữ liệu xuất tuân theo cùng phạm vi quyền như màn hình.
+**Chấp nhận:** Giảng viên không xuất học phí; bộ lọc không có kết quả vẫn trả danh sách rỗng rõ ràng; file tiếng Việt đọc đúng và không kích hoạt công thức từ dữ liệu người dùng.
+
+**FR18 — Nhật ký và ngừng hoạt động.** Quản lý xem lịch sử thay đổi quan trọng, ngừng tài khoản hoặc danh mục và bảo toàn đối tượng đã được tham chiếu.
+**Chấp nhận:** Thao tác thu, tạo/xử lý khoản chờ, thay phiếu, đổi lịch, sửa điểm danh có người thực hiện và thời điểm; người dùng không xóa nhật ký qua chức năng thông thường.
+
+<!-- page -->
+# Phụ lục C Use Case trọng tâm
+## C.1 Ghi danh thu phí và lập lịch
+
+**UC01 — Ghi danh và thu học phí**
+**Tác nhân:** Giáo vụ. **Liên quan:** FR06–FR08; BR02, BR03, BR05–BR08.
+**Tiền điều kiện:** Đã đăng nhập; học viên có hồ sơ; lớp Mở tuyển sinh và chưa bắt đầu.
+
+1. Giáo vụ chọn học viên và lớp; hệ thống hiển thị lịch, điều kiện và học phí.
+2. Hệ thống kiểm tra đăng ký trùng, lịch và điều kiện; tạo ghi danh Chờ thanh toán cùng học phí chốt.
+3. Giáo vụ kiểm tra lại điều kiện trước nhận tiền; nhận đủ tiền, chọn phương thức, nhập thời điểm thu và mã đối chiếu khoản nhận.
+4. Hệ thống kiểm tra lại sĩ số, trạng thái và lịch; lưu phiếu thu và chuyển ghi danh sang Có hiệu lực trong một giao dịch.
+5. Giáo vụ nhận mã phiếu thu và thông tin lớp để bàn giao cho học viên.
+
+**Hậu điều kiện:** Có một phiếu thu hiệu lực; ghi danh chiếm một chỗ. **Ngoại lệ:** Lớp hết chỗ, đã bắt đầu hoặc thu sai số tiền thì từ chối; lỗi lưu thì hoàn tác. Khi mất phản hồi, tra cứu bằng mã đối chiếu hoặc gửi lại cùng định danh để nhận kết quả cũ. Nếu chưa có phiếu mà đã nhận tiền, ghi khoản chờ xử lý theo BR07; không nhận tiền lần nữa.
+
+**UC02 — Lập hoặc đổi lịch học**
+**Tác nhân:** Giáo vụ. **Liên quan:** FR04, FR05, FR14; BR01–BR03, BR09, BR11.
+**Tiền điều kiện:** Lớp tồn tại; phòng và giảng viên đang hoạt động; buổi cần đổi chưa bắt đầu.
+
+1. Giáo vụ chọn lớp, ngày, giờ, phòng và giảng viên.
+2. Hệ thống kiểm tra thời lượng, sức chứa, môn giảng viên/phòng đáp ứng và các khoảng thời gian giao nhau.
+3. Với lịch đổi, hệ thống kiểm tra thêm học viên chính thức, lượt bù đã bố trí và giờ kết thúc không vượt hạn của mỗi quyền bù.
+4. Khi hợp lệ, lưu buổi và lịch sử; nếu kéo dài ngày cuối lớp, gia hạn quyền chưa sử dụng và cập nhật trạng thái theo BR11 trong cùng giao dịch; hiển thị lịch cập nhật.
+
+**Hậu điều kiện:** Có lịch hợp lệ, không gây xung đột. **Ngoại lệ:** Hiển thị đối tượng và buổi đang trùng, không lưu một phần. Nếu tài nguyên vừa bị người khác chiếm, kiểm tra lại tại lúc ghi và từ chối giao dịch xung đột.
+
+<!-- page -->
+## C.2 Điểm danh và học bù
+
+**UC03 — Điểm danh và nhận xét buổi học**
+**Tác nhân:** Giảng viên được phân công. **Liên quan:** FR10–FR12; BR04, BR09–BR12.
+**Tiền điều kiện:** Buổi chưa hủy; danh sách học viên chính thức và học bù đã xác định.
+
+1. Giảng viên mở buổi được giao; hệ thống hiển thị học viên và đề nghị nghỉ đã duyệt.
+2. Giảng viên ghi kết quả, nhận xét; có thể lưu nháp để kiểm tra.
+3. Sau giờ kết thúc, Giảng viên chốt điểm danh lớp gốc và kết quả lượt bù; lượt bù chỉ chọn Có mặt hoặc Vắng.
+4. Hệ thống kiểm tra đủ kết quả, quyền thao tác và vắng có phép; lưu chính thức trong một giao dịch.
+5. Hệ thống cập nhật thống kê, tạo quyền bù cho lần vắng đủ điều kiện hoặc sử dụng quyền của lượt bù có mặt.
+
+**Hậu điều kiện:** Mỗi học viên có một kết quả đã chốt cho buổi. **Ngoại lệ:** Thiếu kết quả, vắng có phép chưa duyệt, buổi hủy hoặc quyền đã dùng thì không chốt. Sửa sai điểm danh lớp gốc sau chốt thực hiện bằng FR11, giữ lịch sử và xử lý quan hệ học bù. Lượt bù đã chốt bị khóa sửa theo BR11.
+
+**UC04 — Bố trí học bù**
+**Tác nhân:** Giáo vụ; Giảng viên xác nhận việc tham dự. **Liên quan:** FR12–FR14; BR02, BR03, BR10–BR11.
+**Tiền điều kiện:** Điểm danh gốc Vắng có phép đã chốt; quyền bù còn hạn và chưa sử dụng.
+
+1. Giáo vụ chọn quyền bù; xem môn, cấp độ, buổi gốc và hạn.
+2. Hệ thống liệt kê buổi phù hợp chưa bắt đầu, kết thúc không quá hạn bù; Giáo vụ chọn buổi.
+3. Hệ thống kiểm tra chỗ, lịch học viên và lịch bù đang giữ; lưu một lượt bù Đã bố trí.
+4. Khi buổi đích diễn ra, Giảng viên chốt kết quả lượt bù.
+5. Có mặt chuyển quyền sang Đã sử dụng; nếu vắng, quyền trở về Chờ bố trí khi còn hạn.
+
+**Hậu điều kiện:** Mỗi lần vắng của một cặp ghi danh và buổi gốc có tối đa một lượt bù đã sử dụng. **Ngoại lệ:** Buổi bù hủy thì giải phóng lịch; hết hạn không bố trí mới; không có lớp phù hợp thì giữ Chờ bố trí để Giáo vụ xử lý, không tự hoàn tiền.
+
+<!-- page -->
+## C.3 Đối chiếu báo cáo
+
+**UC05 — Đối chiếu báo cáo**
+**Tác nhân:** Quản lý hoặc Giáo vụ. **Liên quan:** FR15–FR17; BR07, BR08, BR12.
+**Tiền điều kiện:** Đã đăng nhập với quyền phù hợp.
+
+1. Người dùng chọn khoảng ngày, lớp hoặc môn và loại báo cáo.
+2. Hệ thống truy vấn các bản ghi được phép, áp dụng đúng định nghĩa tiền thu, sĩ số hoặc chuyên cần.
+3. Người dùng xem tổng, mở danh sách nguồn để đối chiếu và xuất CSV theo cùng bộ lọc.
+
+**Hậu điều kiện:** Học phí ghi nhận, tiền đã nhận chưa phân bổ và tiền trả lại có danh sách nguồn riêng, không đếm trùng một khoản nhận. **Ngoại lệ:** Không có dữ liệu hiển thị danh sách rỗng và tổng tiền 0; tỷ lệ có mẫu số 0 hiển thị Không có dữ liệu. Người không có quyền bị từ chối ở máy chủ.
+
+**Quy ước sơ đồ.** Hình 1 dùng liên kết tác nhân–nghiệp vụ và kế thừa tác nhân; Hình 2 dùng hộp công việc, hình thoi quyết định và mũi tên luồng. Hình 3–4 dùng đường quan hệ và bội số tại hai đầu: 1 là đúng một, 0..1 là tối đa một, 0..* là không hoặc nhiều. Tên lớp tiếng Anh để thống nhất khi thiết kế OOAD; chưa thể hiện phương thức hoặc khóa CSDL.
+
+<!-- page -->
+# Phụ lục D Yêu cầu phi chức năng
+
+Các NFR dưới đây là mục tiêu kiểm thử đề xuất. Kết quả phải được ghi theo môi trường và dữ liệu thử khi ứng dụng được triển khai; chưa có kết quả đo trong báo cáo đợt 1.
+
+| Mã | Yêu cầu và cách kiểm chứng |
+| --- | --- |
+| NFR01 | Phân quyền tại máy chủ cho mọi truy cập và xuất dữ liệu. Kiểm thử từng vai trò và thay mã lớp, học viên hoặc chứng từ; mọi truy cập trái quyền bị từ chối. |
+| NFR02 | Không lưu mật khẩu rõ; không ghi mật khẩu vào nhật ký. Chỉ lưu kết quả băm bằng cơ chế chuẩn của nền tảng; kiểm tra dữ liệu và thử đăng nhập sau khi khóa tài khoản. |
+| NFR03 | Giao dịch thu, thay phiếu và chốt điểm danh có tính nguyên tử và chống lặp. Thử lỗi tại các bước ghi, gửi lặp và 2 thao tác tranh chỗ cuối; không có dữ liệu dở dang. |
+| NFR04 | Mục tiêu 95% thao tác tra cứu danh sách hoàn tất trong 2 giây với 10 người dùng đồng thời, 1.000 học viên, 100 lớp, 2.000 buổi. Ghi cấu hình máy, giới hạn trang 50 dòng và điều kiện mạng khi đo. |
+| NFR05 | Giao diện tiếng Việt, nhãn rõ, trạng thái rỗng hoặc lỗi và giữ dữ liệu form khi lỗi. Ba tác vụ ghi danh, thu phí, điểm danh thực hiện được bằng bàn phím trên màn hình từ 1280 × 720. |
+| NFR06 | Sao lưu và khôi phục CSDL cùng nhật ký từ bộ dữ liệu demo. Sau khôi phục, số bản ghi, liên kết và tổng phiếu thu phải khớp; phương án demo có thể chạy local khi mạng lỗi. |
+| NFR07 | Lưu người thực hiện, thời điểm và lý do cho sửa chứng từ, lịch, điểm danh. Không xóa lịch sử qua chức năng thường; người xem nhật ký phải có quyền. Kiểm tra bằng kịch bản trước và sau thay đổi. |
+| NFR08 | Thời gian nghiệp vụ thống nhất theo Asia/Ho_Chi_Minh; tiền VND không dùng số thực dấu phẩy động. CSV mã hóa UTF-8 và vô hiệu hóa giá trị có thể trở thành công thức; kiểm tra file bằng dữ liệu tiếng Việt và chuỗi bắt đầu bằng dấu bằng. |
+
+**Giới hạn vận hành.** Phiên bản học phần phục vụ dữ liệu mẫu, chưa cam kết mức độ sẵn sàng của hệ thống production. Không sử dụng thông tin cá nhân thật để dựng demo khi chưa được người cung cấp đồng ý.
+
+<!-- page -->
+# Phụ lục E Ma trận truy vết
+
+Ma trận giúp kiểm tra mỗi nhóm chức năng trong scope đều có yêu cầu và kịch bản nghiệm thu. TC01–TC12 là mã kịch bản dự kiến, không thể hiện test đã chạy.
+
+| Phạm vi | Yêu cầu | Quy tắc | Kịch bản cần kiểm thử |
+| --- | --- | --- | --- |
+| Tài khoản và quyền | FR01, FR18 | BR04, BR12 | TC01: Giảng viên bị chặn lớp khác và báo cáo học phí; tài khoản khóa không đăng nhập. |
+| Hồ sơ và danh mục | FR02, FR03 | BR01, BR06, BR12 | TC02: Chung người liên hệ; không xóa hồ sơ có tham chiếu; đổi giá không sửa ghi danh cũ. |
+| Lớp và lịch | FR04, FR05, FR14 | BR01–BR03, BR09 | TC03: Giảng viên/phòng sai môn; thiếu lịch; trùng giờ và 2 người lưu cùng phòng; phòng mới thiếu sức chứa. |
+| Ghi danh | FR06, FR07 | BR02, BR03, BR05 | TC04: Trùng ghi danh; lớp đã bắt đầu; chờ thu không giữ chỗ; tranh chỗ cuối. |
+| Thu học phí | FR07 | BR06, BR07 | TC05: Đủ, thiếu, thừa; gửi lặp; lỗi giữa giao dịch không kích hoạt hoặc sinh phiếu một phần. |
+| Chứng từ | FR08, FR16 | BR08, BR12 | TC06: Thay phiếu đúng quyền, cùng số tiền và ngày thu; giữ lịch sử và không cộng hai lần. |
+| Vòng đời lớp | FR09 | BR05, BR09, BR11 | TC07: Hủy lớp chỉ trước buổi đầu và chưa có phiếu học phí; hủy 1 trong 12 buổi của lớp tiếp tục phải có buổi thay thế; chưa đủ điểm danh không hoàn thành; lớp xong vẫn dùng quyền bù còn hạn. |
+| Điểm danh | FR10, FR11 | BR04, BR09–BR12 | TC08: Chốt đúng giờ; lưu lặp; sửa có lý do; chặn sửa gốc đã có bù sử dụng. |
+| Nghỉ và học bù | FR12, FR13, FR14 | BR02, BR03, BR10, BR11 | TC09: Chốt bù muộn xét giờ kết thúc trong hạn; gia hạn phục hồi quyền Hết hạn; vắng chưa duyệt; sai môn/cấp độ; hết chỗ; 2 lịch bù; hủy/vắng bù và hết hạn. |
+| Báo cáo chuyên cần | FR15 | BR09, BR12 | TC10: Mẫu số 0; buổi hủy không tính; học bù trình bày riêng. |
+| Báo cáo thu phí | FR16 | BR06–BR08, BR12 | TC11: Phiếu hiệu lực khớp tổng học phí; khoản chờ có nguồn, xử lý lại không đếm trùng; trả tiền thủ công có bằng chứng. |
+| Tra cứu và xuất | FR17 | BR04, BR12 | TC12: Bộ lọc khớp nguồn; không lộ dữ liệu trái quyền; tiếng Việt và chống công thức CSV. |
+
+NFR01–NFR08 được kiểm chứng bằng các kịch bản bảo mật, toàn vẹn, tải, khả dụng và khôi phục tương ứng. Khi thay BR hoặc FR, nhóm cập nhật UC, thiết kế và TC liên quan trong cùng lần rà soát.

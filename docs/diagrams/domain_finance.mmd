@@ -1,0 +1,8 @@
+classDiagram
+  direction LR
+  Course "1" -- "0..*" ClassGroup
+  ClassGroup "1" -- "0..*" Enrollment
+  Student "1" -- "0..*" Enrollment
+  Enrollment "1" -- "0..*" Receipt
+  Enrollment "1" -- "0..*" PaymentIncident
+  Receipt "0..1" -- "0..1" PaymentIncident : linked after resolution

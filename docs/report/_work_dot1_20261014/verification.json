@@ -1,0 +1,21 @@
+{
+  "pages": 21,
+  "toc_entries_checked": 34,
+  "text_color": "black",
+  "numbered_heading_count": 34,
+  "requirements": {
+    "FR": 18,
+    "BR": 12,
+    "NFR": 8,
+    "UC": 5
+  },
+  "inline_images": 5,
+  "qr_decoded_from_rendered_cover": true,
+  "changed_pages_since_full_visual_review": [
+    "page-14.png",
+    "page-16.png",
+    "page-5.png",
+    "page-8.png"
+  ],
+  "output_bytes": 303877
+}

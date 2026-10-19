@@ -1,0 +1,12 @@
+classDiagram
+  direction LR
+  ClassGroup "1" -- "0..*" Lesson
+  Room "1" -- "0..*" Lesson
+  Instructor "1" -- "0..*" Lesson
+  Enrollment "1" -- "0..*" Attendance
+  Lesson "1" -- "0..*" Attendance
+  Attendance "1" -- "0..1" MakeupEntitlement
+  MakeupEntitlement "1" -- "0..*" MakeupBooking
+  Lesson "1" -- "0..*" MakeupBooking
+  Enrollment "1" -- "0..*" LeaveRequest
+  Lesson "1" -- "0..*" LeaveRequest
