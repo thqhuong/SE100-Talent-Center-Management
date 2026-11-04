@@ -36,7 +36,8 @@ services:
     pull_policy: never
     environment:
       <<: *api-env
-      TSC_WATCHFILE: DynamicPriorityPolling
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "350"
     volumes:
       - ./project/backend/src:/app/src:ro
     depends_on:
