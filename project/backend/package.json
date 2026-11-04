@@ -1,0 +1,38 @@
+{
+  "name": "@se100/api",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/main.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "node prisma/seed.cjs",
+    "admin:create": "node prisma/create-admin.cjs",
+    "db:generate": "prisma generate",
+    "db:validate": "prisma validate"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.2.8",
+    "@nestjs/core": "11.2.8",
+    "@nestjs/platform-express": "11.2.8",
+    "@nestjs/throttler": "6.7.1",
+    "@prisma/client": "6.19.3",
+    "prisma": "6.19.3",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "overrides": {
+    "@nestjs/platform-express": { "multer": "2.5.0" },
+    "@prisma/config": { "deepmerge-ts": "8.0.2" }
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/express": "^5.0.0",
+    "typescript": "~5.9.3",
+    "tsx": "4.23.15"
+  }
+}

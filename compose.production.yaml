@@ -1,0 +1,77 @@
+# Standalone Linux deployment configuration.
+name: se100-live
+x-api-env: &api-env
+  DATABASE_URL: postgresql://harmony:${DB_PASSWORD:?Set DB_PASSWORD in the host environment}@db:5432/harmony
+  NODE_ENV: production
+  PUBLIC_ORIGIN: https://${APP_DOMAIN:?Set APP_DOMAIN to the server DNS name}
+  COOKIE_SECURE: "true"
+  PORT: "3001"
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: harmony
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+      POSTGRES_DB: harmony
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: [private]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U harmony -d harmony"]
+      interval: 5s
+      timeout: 4s
+      retries: 30
+  migrate:
+    image: ${COMPOSE_PROJECT_NAME:-se100-live}-api
+    build: { context: ./project/backend, target: runtime }
+    environment: *api-env
+    networks: [private]
+    depends_on:
+      db: { condition: service_healthy }
+    command: ["npm","run","db:migrate"]
+    restart: "no"
+  api:
+    image: ${COMPOSE_PROJECT_NAME:-se100-live}-api
+    pull_policy: never
+    restart: unless-stopped
+    environment: *api-env
+    networks: [private]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 4s
+      retries: 30
+  web:
+    build: { context: ./project/frontend, target: production }
+    restart: unless-stopped
+    networks: [private]
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/api/v1/health"]
+      interval: 5s
+      timeout: 4s
+      retries: 30
+  gateway:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set APP_DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - certs:/data
+      - gateway_config:/config
+    ports: ["80:80","443:443"]
+    networks: [edge,private]
+    depends_on:
+      web: { condition: service_healthy }
+networks:
+  private: { internal: true }
+  edge: {}
+volumes:
+  pgdata: {}
+  certs: {}
+  gateway_config: {}

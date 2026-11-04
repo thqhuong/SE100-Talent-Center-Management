@@ -1,0 +1,584 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum StaffRole {
+  MANAGER
+  ACADEMIC_STAFF
+  TEACHER
+}
+
+enum ClassType {
+  GROUP
+  ONE_ON_ONE
+}
+
+enum ClassStatus {
+  PREPARING
+  ENROLLING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum SessionStatus {
+  SCHEDULED
+  LOCKED
+  POSTPONED
+  REPLACED
+  CANCELLED
+}
+
+enum WaitlistStatus {
+  WAITING
+  CONTACTED
+  ENROLLED
+  SKIPPED
+  CLOSED
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+}
+
+enum PendingFundStatus {
+  PENDING
+  ALLOCATED
+  REFUNDED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
+
+enum SkillProgressLevel {
+  NOT_ASSESSED
+  PRACTICING
+  ACHIEVED
+}
+
+enum MakeupRightStatus {
+  PENDING_SLOT
+  SCHEDULED
+  USED
+  NO_SHOW
+  EXPIRED
+  REVOKED
+}
+
+enum MakeupBookingStatus {
+  CONFIRMED
+  RELEASED
+  ATTENDED
+  NO_SHOW
+  CENTER_POSTPONED
+}
+
+enum ParameterEffectMechanism {
+  COMMITMENT_SNAPSHOT
+  OPERATIONAL_DATE
+  REMINDER_THRESHOLD
+}
+
+enum ActionTaskType {
+  CONSECUTIVE_ABSENCE
+  MAKEUP_EXPIRING_SOON
+  SCHEDULE_CHANGE_NOTIFY
+  PENDING_FUND_FOLLOWUP
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum ApprovalType {
+  UNDER_MIN_CAPACITY_CLASS
+  POST_LOCK_ATTENDANCE_EDIT
+  POST_LOCK_ASSESSMENT_EDIT
+  LATE_LEAVE_MAKEUP_EXCEPTION
+  MAKEUP_EXPIRY_EXTENSION
+  PENDING_FUND_REFUND
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model StaffUser {
+  id                      String   @id @default(uuid())
+  staffCode               String   @unique
+  fullName                String
+  phoneNumber             String?
+  role                    StaffRole
+  transitionBufferMinutes Int      @default(10)
+  isActive                Boolean  @default(true)
+  createdAt               DateTime @default(now())
+
+  account               Account?
+  teacherQualifications TeacherQualification[]
+  assignedSessions      ClassSession[]         @relation("SessionTeacher")
+  createdReceipts       Receipt[]              @relation("ReceiptCreator")
+  lockedAttendances     Attendance[]           @relation("AttendanceLocker")
+  skillAssessments      SkillAssessment[]      @relation("SkillAssessor")
+  recordedLeaves        LeaveRequest[]         @relation("LeaveRecorder")
+  confirmedMakeups      MakeupBooking[]        @relation("MakeupConfirmer")
+  assignedTasks         ActionTask[]           @relation("TaskAssignee")
+  requestedApprovals    ApprovalRequest[]      @relation("ApprovalRequester")
+  reviewedApprovals     ApprovalRequest[]      @relation("ApprovalReviewer")
+}
+
+model Student {
+  id            String   @id @default(uuid())
+  studentCode   String   @unique
+  fullName      String
+  dateOfBirth   DateTime?
+  learningNotes String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  account           Account?
+  contacts          StudentContact[]
+  consultationNeeds ConsultationNeed[]
+  waitlistEntries   WaitlistEntry[]
+  enrollments       Enrollment[]
+  pendingFunds      PendingFund[]
+  attendances       Attendance[]
+  skillAssessments  SkillAssessment[]
+  actionTasks       ActionTask[]
+}
+
+model ContactPerson {
+  id          String   @id @default(uuid())
+  fullName    String
+  phoneNumber String
+  email       String?
+  createdAt   DateTime @default(now())
+
+  studentLinks StudentContact[]
+}
+
+model StudentContact {
+  id              String  @id @default(uuid())
+  studentId       String
+  contactPersonId String
+  relationship    String
+  isPrimary       Boolean @default(true)
+
+  student       Student       @relation(fields: [studentId], references: [id])
+  contactPerson ContactPerson @relation(fields: [contactPersonId], references: [id])
+
+  @@unique([studentId, contactPersonId])
+}
+
+model Subject {
+  id                           String  @id @default(uuid())
+  code                         String  @unique
+  name                         String
+  requiresIndividualInstrument Boolean @default(true)
+
+  programs              Program[]
+  roomEquipments        RoomEquipment[]
+  teacherQualifications TeacherQualification[]
+}
+
+model Program {
+  id                     String  @id @default(uuid())
+  subjectId              String
+  code                   String  @unique
+  name                   String
+  levelName              String
+  deliveryModes          DeliveryMode[] @default([ONSITE])
+  objective              String?
+  defaultSessionsCount   Int     @default(24)
+  defaultDurationMinutes Int     @default(60)
+  defaultGroupTuition    Decimal @default(2400000)
+  defaultOneOnOneTuition Decimal @default(6000000)
+  isActive               Boolean @default(true)
+
+  subject         Subject          @relation(fields: [subjectId], references: [id])
+  topics          ProgramTopic[]
+  skillReferences SkillReference[]
+  classes         CourseClass[]
+}
+
+model ProgramTopic {
+  id           String @id @default(uuid())
+  programId    String
+  sessionOrder Int
+  topicCode    String
+  title        String
+
+  program  Program        @relation(fields: [programId], references: [id])
+  sessions ClassSession[]
+
+  @@unique([programId, sessionOrder])
+}
+
+model SkillReference {
+  id             String  @id @default(uuid())
+  programId      String
+  skillCode      String
+  skillName      String
+  referencePiece String?
+  displayOrder   Int     @default(1)
+  isActive       Boolean @default(true)
+
+  program     Program           @relation(fields: [programId], references: [id])
+  assessments SkillAssessment[]
+
+  @@unique([programId, skillCode])
+}
+
+model TeacherQualification {
+  id        String @id @default(uuid())
+  teacherId String
+  subjectId String
+  levelName String
+
+  teacher StaffUser @relation(fields: [teacherId], references: [id])
+  subject Subject   @relation(fields: [subjectId], references: [id])
+
+  @@unique([teacherId, subjectId, levelName])
+}
+
+model Room {
+  id               String  @id @default(uuid())
+  roomCode         String  @unique
+  name             String
+  maxHumanCapacity Int     @default(5)
+  bufferMinutes    Int     @default(10)
+  isActive         Boolean @default(true)
+
+  equipments RoomEquipment[]
+  sessions   ClassSession[]
+}
+
+model RoomEquipment {
+  id               String  @id @default(uuid())
+  roomId           String
+  subjectId        String
+  equipmentName    String
+  totalQuantity    Int
+  goodQuantity     Int
+  isIndividualUnit Boolean @default(true)
+
+  room    Room    @relation(fields: [roomId], references: [id])
+  subject Subject @relation(fields: [subjectId], references: [id])
+}
+
+model CourseClass {
+  id                       String      @id @default(uuid())
+  classCode                String      @unique
+  name                     String
+  programId                String
+  deliveryMode             DeliveryMode @default(ONSITE)
+  classType                ClassType
+  status                   ClassStatus @default(PREPARING)
+
+  minCapacity              Int         @default(2)
+  maxCapacity              Int         @default(5)
+  committedSessionsCount   Int         @default(24)
+  committedDurationMinutes Int         @default(60)
+  committedTuitionFee      Decimal     @default(2400000)
+  startDate                DateTime
+  createdAt                DateTime    @default(now())
+
+  program         Program         @relation(fields: [programId], references: [id])
+  sessions        ClassSession[]
+  waitlistEntries WaitlistEntry[]
+  enrollments     Enrollment[]
+}
+
+model ClassSession {
+  id                     String        @id @default(uuid())
+  classId                String
+  sessionNumber          Int
+  topicId                String
+  roomId                 String?
+  assignedTeacherId      String
+  startTime              DateTime
+  endTime                DateTime
+  status                 SessionStatus @default(SCHEDULED)
+  replacedForSessionId   String?       @unique
+  isPrivateMakeupSession Boolean       @default(false)
+
+  courseClass        CourseClass       @relation(fields: [classId], references: [id])
+  topic              ProgramTopic      @relation(fields: [topicId], references: [id])
+  room               Room?             @relation(fields: [roomId], references: [id])
+  assignedTeacher    StaffUser         @relation("SessionTeacher", fields: [assignedTeacherId], references: [id])
+  replacedForSession ClassSession?     @relation("SessionReplacement", fields: [replacedForSessionId], references: [id])
+  replacementSession ClassSession?     @relation("SessionReplacement")
+  attendances        Attendance[]
+  skillAssessments   SkillAssessment[]
+  leaveRequests      LeaveRequest[]
+  makeupRights       MakeupRight[]
+  makeupBookings     MakeupBooking[]
+}
+
+model ConsultationNeed {
+  id               String   @id @default(uuid())
+  studentId        String
+  subjectCode      String
+  desiredLevel     String?
+  preferredTimeSlot String?
+  notes            String?
+  status           String   @default("CONSULTING")
+  createdAt        DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+model WaitlistEntry {
+  id          String         @id @default(uuid())
+  studentId   String
+  classId     String
+  requestedAt DateTime       @default(now())
+  status      WaitlistStatus @default(WAITING)
+  skipReason  String?
+
+  student     Student     @relation(fields: [studentId], references: [id])
+  courseClass CourseClass @relation(fields: [classId], references: [id])
+}
+
+model Enrollment {
+  id                         String           @id @default(uuid())
+  enrollmentCode             String           @unique
+  studentId                  String
+  classId                    String
+  status                     EnrollmentStatus @default(ACTIVE)
+
+  agreedTuitionFee           Decimal
+  appliedMinLeaveNoticeHours Int              @default(24)
+  appliedMakeupExpiryDays    Int              @default(30)
+  idempotencyKey             String           @unique
+  enrolledAt                 DateTime         @default(now())
+
+  student          Student           @relation(fields: [studentId], references: [id])
+  courseClass      CourseClass       @relation(fields: [classId], references: [id])
+  receipts         Receipt[]
+  attendances      Attendance[]
+  skillAssessments SkillAssessment[]
+  leaveRequests    LeaveRequest[]
+  makeupRights     MakeupRight[]
+
+  @@unique([studentId, classId])
+}
+
+model Receipt {
+  id               String        @id @default(uuid())
+  receiptCode      String        @unique
+  enrollmentId     String?
+  payerName        String
+  amount           Decimal
+  paymentMethod    PaymentMethod
+  bankReference    String?       @unique
+  idempotencyKey   String        @unique
+  createdByStaffId String
+  issuedAt         DateTime      @default(now())
+
+  enrollment     Enrollment?  @relation(fields: [enrollmentId], references: [id])
+  createdByStaff StaffUser    @relation("ReceiptCreator", fields: [createdByStaffId], references: [id])
+  pendingFund    PendingFund?
+}
+
+model PendingFund {
+  id                  String            @id @default(uuid())
+  receiptId           String            @unique
+  studentId           String
+  originalAmount      Decimal
+  remainingBalance    Decimal
+  reason              String
+  status              PendingFundStatus @default(PENDING)
+  approvedByManagerId String?
+  updatedAt           DateTime          @updatedAt
+
+  receipt Receipt @relation(fields: [receiptId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+model Attendance {
+  id                String           @id @default(uuid())
+  sessionId         String
+  studentId         String
+  enrollmentId      String
+  makeupBookingId   String?
+  status            AttendanceStatus
+  note              String?
+  lockedByTeacherId String
+  lockedAt          DateTime         @default(now())
+
+  session         ClassSession @relation(fields: [sessionId], references: [id])
+  student         Student      @relation(fields: [studentId], references: [id])
+  enrollment      Enrollment   @relation(fields: [enrollmentId], references: [id])
+  lockedByTeacher StaffUser    @relation("AttendanceLocker", fields: [lockedByTeacherId], references: [id])
+
+  @@unique([sessionId, studentId])
+}
+
+model SkillAssessment {
+  id                  String             @id @default(uuid())
+  studentId           String
+  enrollmentId        String
+  actualSessionId     String
+  skillReferenceId    String
+  practiceSegment     String
+  level               SkillProgressLevel @default(NOT_ASSESSED)
+  comment             String?
+  assessedByTeacherId String
+  isEffective         Boolean            @default(true)
+  assessedAt          DateTime           @default(now())
+
+  student           Student        @relation(fields: [studentId], references: [id])
+  enrollment        Enrollment     @relation(fields: [enrollmentId], references: [id])
+  actualSession     ClassSession   @relation(fields: [actualSessionId], references: [id])
+  skillReference    SkillReference @relation(fields: [skillReferenceId], references: [id])
+  assessedByTeacher StaffUser      @relation("SkillAssessor", fields: [assessedByTeacherId], references: [id])
+
+  @@unique([enrollmentId, actualSessionId, skillReferenceId])
+}
+
+model LeaveRequest {
+  id                String   @id @default(uuid())
+  enrollmentId      String
+  originalSessionId String
+  reason            String
+  contactChannel    String
+  reportedAt        DateTime
+  recordedAt        DateTime @default(now())
+  recordedByStaffId String
+
+  enrollment      Enrollment   @relation(fields: [enrollmentId], references: [id])
+  originalSession ClassSession @relation(fields: [originalSessionId], references: [id])
+  recordedByStaff StaffUser    @relation("LeaveRecorder", fields: [recordedByStaffId], references: [id])
+  makeupRight     MakeupRight?
+
+  @@unique([enrollmentId, originalSessionId])
+}
+
+model MakeupRight {
+  id                          String            @id @default(uuid())
+  enrollmentId                String
+  originalSessionId           String
+  leaveRequestId              String            @unique
+  expiresAt                   DateTime
+  status                      MakeupRightStatus @default(PENDING_SLOT)
+  revocationOrExtensionReason String?
+  createdAt                   DateTime          @default(now())
+
+  enrollment      Enrollment      @relation(fields: [enrollmentId], references: [id])
+  originalSession ClassSession    @relation(fields: [originalSessionId], references: [id])
+  leaveRequest    LeaveRequest    @relation(fields: [leaveRequestId], references: [id])
+  bookings        MakeupBooking[]
+
+  @@unique([enrollmentId, originalSessionId])
+}
+
+model MakeupBooking {
+  id                 String              @id @default(uuid())
+  makeupRightId      String
+  targetSessionId    String
+  status             MakeupBookingStatus @default(CONFIRMED)
+  confirmedByStaffId String
+  confirmedAt        DateTime            @default(now())
+
+  makeupRight      MakeupRight  @relation(fields: [makeupRightId], references: [id])
+  targetSession    ClassSession @relation(fields: [targetSessionId], references: [id])
+  confirmedByStaff StaffUser    @relation("MakeupConfirmer", fields: [confirmedByStaffId], references: [id])
+}
+
+model SystemParameter {
+  id                String                   @id @default(uuid())
+  paramOrder        Int                      @unique
+  paramKey          String                   @unique
+  paramName         String
+  scopeAndUnit      String
+  expectedValue     String
+  shortRule         String
+  effectMechanism   ParameterEffectMechanism
+  effectiveFrom     DateTime                 @default(now())
+  updatedByStaffId  String?
+  updatedAt         DateTime                 @updatedAt
+}
+
+model ActionTask {
+  id                  String         @id @default(uuid())
+  taskType            ActionTaskType
+  studentId           String?
+  referenceCode       String
+  title               String
+  description         String
+  assignedStaffId     String
+  status              TaskStatus     @default(OPEN)
+  latestContactResult String?
+  dueAt               DateTime?
+  createdAt           DateTime       @default(now())
+
+  student       Student?  @relation(fields: [studentId], references: [id])
+  assignedStaff StaffUser @relation("TaskAssignee", fields: [assignedStaffId], references: [id])
+}
+
+model ApprovalRequest {
+  id               String         @id @default(uuid())
+  approvalType     ApprovalType
+  referenceId      String
+  requestedById    String
+  reviewedById     String?
+  reason           String
+  beforeSnapshot   String?
+  proposedSnapshot String?
+  status           ApprovalStatus @default(PENDING)
+  reviewerNote     String?
+  createdAt        DateTime       @default(now())
+  reviewedAt       DateTime?
+
+  requestedBy StaffUser  @relation("ApprovalRequester", fields: [requestedById], references: [id])
+  reviewedBy  StaffUser? @relation("ApprovalReviewer", fields: [reviewedById], references: [id])
+}
+
+enum DeliveryMode {
+  ONSITE
+  ONLINE
+}
+
+model Account {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  staffId      String?       @unique
+  studentId    String?       @unique
+  staff        StaffUser?    @relation(fields: [staffId], references: [id])
+  student      Student?      @relation(fields: [studentId], references: [id])
+  sessions     AuthSession[]
+}
+
+model AuthSession {
+  tokenHash String   @id
+  accountId String
+  expiresAt DateTime @db.Timestamptz(3)
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+  @@index([expiresAt])
+}
+
+model SeedRun {
+  name String @id
+  appliedAt DateTime @default(now()) @db.Timestamptz(3)
+}

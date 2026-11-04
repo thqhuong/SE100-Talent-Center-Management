@@ -1,59 +1,56 @@
-# SE100 — Phần mềm quản lý trung tâm dạy năng khiếu
+# Bắt đầu với Harmony
 
-[![Course](https://img.shields.io/badge/Course-SE100%20OOAD-blue.svg)](./SE100.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![UML Standard](https://img.shields.io/badge/Modeling-UML%202.5-orange.svg)](https://www.uml.org/)
+Harmony là đồ án SE100 về quản lý một trung tâm âm nhạc. Bản khởi động có danh mục chương trình, đăng nhập và lịch học cá nhân. Mỗi bạn chạy ứng dụng và cơ sở dữ liệu ngay trên máy mình.
 
-Đồ án môn học: **Phương pháp phát triển phần mềm hướng đối tượng (OOAD) — SE100**  
-Khoa Kỹ thuật Phần mềm — Trường ĐH Công nghệ Thông tin (UIT - VNUHCM).
+## Lần đầu chạy trên Windows
 
----
+1. Hướng mời bạn vào kho GitHub riêng. Mở lời mời và chấp nhận bằng đúng tài khoản GitHub của bạn.
+2. Cài Git và Docker Desktop. Mở Docker Desktop, đợi Docker Engine báo đang chạy.
+3. Mở PowerShell tại thư mục muốn lưu bài và chạy ba lệnh sau.
 
-## 👥 Danh sách Thành viên Thực hiện (Nhóm Đồ án)
-
-| STT | MSSV | Họ và tên | Vai trò | Trách nhiệm chính |
-| :---: | :---: | :--- | :---: | :--- |
-| 1 | `24520644` | **Trần Hữu Quốc Hướng** | 👑 **Trưởng nhóm** | Quản lý tiến độ, kiến trúc hệ thống, Use Case lõi, tổng hợp báo cáo |
-| 2 | `24520763` | **Nguyễn Tuấn Khang** | Thành viên | Phân tích nghiệp vụ, Sequence Diagrams, giao diện |
-| 3 | `24520680` | **Nguyễn Lê Đức Huy** | Thành viên | Thiết kế CSDL (ERD/Relational), Class Diagram |
-| 4 | `24521489` | **Dương Nguyễn Phú Quý** | Thành viên | Phân tích yêu cầu FR/NFR, Activity Diagrams |
-| 5 | `23520355` | **Nguyễn Văn Hoàng** | Thành viên | Thiết kế giao diện (Wireframes/Mockup), Component Diagram |
-| 6 | `24520244` | **Đào Phúc Đại** | Thành viên | Phân tích kịch bản ngoại lệ, Deployment Diagram, kiểm thử |
-
----
-
-## 🎯 Giới thiệu Đề tài & Phạm vi Nghiệp vụ
-
-Phần mềm hỗ trợ quản lý vận hành trung tâm đào tạo các môn năng khiếu (âm nhạc, mỹ thuật, thể thao, kỹ năng sống) tại một chi nhánh:
-- **3 vai trò người dùng**: Quản lý trung tâm, Giáo vụ, Giảng viên.
-- **Quản lý khóa học & lớp học**: Thiết lập lớp theo khóa với số buổi cố định, quản lý phòng học và lịch dạy.
-- **Ghi danh & Học phí**: Thu học phí trọn gói theo khóa, xuất phiếu thu và quản lý sổ tiền chờ duyệt.
-- **Điểm danh & Học bù**: Theo dõi buổi học, xử lý học viên vắng có phép và sắp xếp lớp học bù.
-- **Báo cáo thống kê**: Thống kê doanh thu, sĩ số lớp học và hiệu suất giảng dạy.
-
----
-
-## 🏛️ Khung Báo cáo 5 Chương Chuẩn OOAD
-
-1. **Chương 1. Tổng quan đề tài**: Hiện trạng thực tế, mục tiêu đề tài, giới hạn phạm vi, biểu mẫu chứng từ và quy định nghiệp vụ.
-2. **Chương 2. Phân tích (Analysis)**: Sơ đồ Use Case tổng quát, đặc tả Use Case chi tiết, sơ đồ Activity Diagram và Sequence Diagram.
-3. **Chương 3. Thiết kế (Design)**: Thiết kế CSDL quan hệ (ERD), thiết kế Screen Flow & Wireframes, thiết kế chi tiết các lớp (Class Diagram), kiến trúc phân tầng (Layered/MVC).
-4. **Chương 4. Xây dựng và Triển khai (Implementation)**: Tổng quan công nghệ, Component Diagram, Deployment Diagram, ma trận phân công công việc.
-5. **Chương 5. Tổng kết**: Đánh giá kết quả, ưu khuyết điểm, hướng phát triển và liên kết video demo.
-
----
-
-## 📂 Cấu trúc Thư mục
-
+```powershell
+git clone --branch develop https://github.com/thqhuong/SE100-Talent-Center-Management.git se100
+cd se100
+docker compose up --build -d --wait
 ```
-SE100-Talent-Center-Management/
-├── docs/                     # Tài liệu đặc tả yêu cầu, thiết kế UML, báo cáo tiến độ
-│   ├── diagrams/             # Sơ đồ Mermaid, ảnh export StarUML
-│   └── report/               # Báo cáo Đợt 1, Đợt 2 và bản cuối kỳ
-├── project/                  # Mã nguồn ứng dụng (Frontend, Backend, Database)
-├── presentations/            # Slide thuyết trình Đợt 1, Đợt 2 và Vấn đáp cuối kỳ
-├── labs/                     # Bài tập thực hành 6 buổi môn học
-├── CONTRIBUTING.md           # Hướng dẫn đóng góp và quy ước Git
-├── CHANGELOG.md              # Nhật ký các đợt nộp báo cáo và sprint
-└── README.md                 # Tài liệu này
-```
+
+4. Mở **[ứng dụng trên máy bạn](http://localhost:3000)**. Lần đầu Docker cần tải các gói phần mềm. Đợi các dịch vụ báo sẵn sàng rồi mới mở trình duyệt.
+
+### Thử trong hai phút
+
+Mở danh mục và tìm **Piano** và **Thanh nhạc**. Đăng nhập bằng An, xem lịch rồi đăng xuất. Làm lại bằng Bình. An có buổi tại trung tâm, Bình có buổi online. Hai người xem hai danh sách khác nhau dù dùng cùng một máy chủ.
+
+Tất cả tài khoản dưới đây dùng mật khẩu `HarmonyDemo2026!` **trên bản phát triển ở máy cá nhân**.
+
+| Người dùng thử | Email |
+| --- | --- |
+| Quản lý | `manager@harmony.test` |
+| Giáo vụ | `staff@harmony.test` |
+| Giảng viên | `teacher@harmony.test` |
+| Học viên An | `an@harmony.test` |
+| Học viên Bình | `binh@harmony.test` |
+
+## Bắt đầu việc của mình
+
+Mở [phiếu Word của sáu thành viên](./docs/planning/2026-11-04/README.md) và đọc phần **việc đầu tiên**. Hướng, Huy và Khang làm Figma cùng các luồng chính. Hoàng chuẩn bị dữ liệu mở rộng và sao lưu. Quý viết đặc tả và tình huống kiểm thử. Đại phụ trách hướng dẫn, kiểm thử người dùng và báo cáo cuối kỳ.
+
+| Bạn muốn làm gì? | Mở ở đâu? |
+| --- | --- |
+| Sửa chữ hoặc cách hiển thị trên web | [Giao diện React](./project/frontend/src/) |
+| Tìm đoạn máy chủ kiểm tra người đăng nhập và trả lịch | [Máy chủ NestJS](./project/backend/src/) |
+| Xem các bảng, thay đổi CSDL và bộ dữ liệu ví dụ | [Dữ liệu PostgreSQL](./project/backend/prisma/) |
+| Tạo nhánh, gửi phần mình làm để nhóm kiểm tra | [Cách làm việc nhóm](./CONTRIBUTING.md) |
+| Đưa bản chung lên máy Linux của nhóm | [Hướng dẫn triển khai](./deploy/README.md) |
+
+Từ thư mục `se100`, dừng ứng dụng bằng `docker compose stop`. Mở lại bằng `docker compose up -d --wait`. Dữ liệu nằm trong volume riêng của Docker và còn sau khi dừng dịch vụ. Khi nhóm thay đổi thư viện hoặc cấu trúc dữ liệu, cập nhật nhánh rồi chạy lại lệnh có `--build`. Khi sửa tệp trong hai thư mục `src`, bản phát triển sẽ tự tải lại.
+
+### Nếu chưa mở được trang
+
+- **GitHub báo không tìm thấy kho.** Mở lời mời của Hướng và kiểm tra tài khoản đang đăng nhập vào Git.
+- **Docker báo không kết nối được engine.** Mở Docker Desktop, chọn Linux containers rồi thử `docker info`.
+- **Cổng 3000 đang bận.** Trong PowerShell chạy `$env:WEB_PORT='3002'`, chạy lại lệnh khởi động và mở `http://localhost:3002`.
+- **Một dịch vụ chưa sẵn sàng.** Chạy `docker compose ps -a` rồi `docker compose logs --tail=50 init api web`. Dịch vụ `init` kết thúc với mã 0 là bình thường vì việc của nó là tạo bảng và nạp dữ liệu mẫu.
+
+## Các mốc chung
+
+Figma bàn giao trước **22:00 ngày 12/11/2026**, sẵn sàng từ 13/11 cho buổi trình bày 27/11. Bộ đồ án bàn giao trước **22:00 ngày 11/12/2026**, sẵn sàng từ 12/12 cho hạn cuối kỳ **tạm tính** 26/12. [Lịch và đầu ra theo giai đoạn](./docs/planning/2026-11-04/MILESTONES.md).

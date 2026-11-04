@@ -1,0 +1,70 @@
+# Development stack. Only the web entry point is published to the host.
+x-api-build: &api-build
+  context: ./project/backend
+  target: development
+x-api-env: &api-env
+  DATABASE_URL: postgresql://harmony:local_demo_password@db:5432/harmony
+  PORT: "3001"
+  COOKIE_SECURE: "false"
+  PUBLIC_ORIGIN: http://localhost:${WEB_PORT:-3000}
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: harmony
+      POSTGRES_PASSWORD: local_demo_password
+      POSTGRES_DB: harmony
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U harmony -d harmony"]
+      interval: 3s
+      timeout: 4s
+      retries: 30
+  init:
+    image: ${COMPOSE_PROJECT_NAME:-se100}-api-dev
+    build: *api-build
+    environment:
+      <<: *api-env
+      DEMO_SEED: "true"
+    depends_on:
+      db: { condition: service_healthy }
+    command: ["sh", "-ec", "npm run db:migrate && npm run db:seed"]
+    restart: "no"
+  api:
+    image: ${COMPOSE_PROJECT_NAME:-se100}-api-dev
+    pull_policy: never
+    environment:
+      <<: *api-env
+      TSC_WATCHFILE: DynamicPriorityPolling
+    volumes:
+      - ./project/backend/src:/app/src:ro
+    depends_on:
+      init: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 4s
+      retries: 40
+      start_period: 10s
+  web:
+    build:
+      context: ./project/frontend
+      target: dev
+    environment:
+      API_PROXY_TARGET: http://api:3001
+      VITE_DEMO_HINTS: "true"
+      USE_POLLING: "true"
+    ports:
+      - "127.0.0.1:${WEB_PORT:-3000}:3000"
+    volumes:
+      - ./project/frontend/src:/app/src:ro
+    depends_on:
+      api: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 4s
+      retries: 30
+volumes:
+  pgdata:

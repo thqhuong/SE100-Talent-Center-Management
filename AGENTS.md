@@ -1,5 +1,15 @@
 # SE100 - Phương pháp phát triển phần mềm hướng đối tượng (OOAD)
 
+## Chỉ dẫn hiện hành ngày 04/11/2026
+
+Đọc [hướng dẫn chạy bộ khởi động](./README.md) và [phiếu phân công hiện hành](./docs/planning/2026-11-04/README.md) trước khi nhận việc. Khi thông tin lịch sử bên dưới khác các quyết định sau, dùng các quyết định ngày 04/11.
+
+- Phạm vi gồm trung tâm âm nhạc một chi nhánh, chương trình và giáo trình từng buổi, lớp tại trung tâm và lớp online trực tiếp. Bốn vai trò là Quản lý, Giáo vụ, Giảng viên và Học viên. Học viên có lịch và tài liệu của mình.
+- Hướng, Huy, Khang cùng làm Figma. Hướng trực tiếp làm tài khoản, quyền và server tự host. Khang trực tiếp làm lớp, lịch, sức chứa, ghi danh và học phí. Huy trực tiếp làm giáo trình, điểm danh, nghỉ, tiến bộ, bộ lọc và giao dịch học bù.
+- Hoàng bổ sung dữ liệu thử, sơ đồ CSDL và công cụ phục hồi. Quý viết đặc tả, sơ đồ và tình huống kiểm thử. Đại viết hướng dẫn, kiểm thử độc lập và biên tập báo cáo cuối kỳ. Ba nhánh này làm song song với luồng sản phẩm.
+- Đợt 2 ngày 27/11 chỉ trình chiếu Figma và trả lời câu hỏi. Chốt Figma 22:00 ngày 12/11. Báo cáo nộp là báo cáo toàn đồ án. Chốt bộ nộp 22:00 ngày 11/12 cho hạn cuối kỳ tạm tính 26/12. Tình trạng giao việc khác với tình trạng hoàn thành, mọi kết quả cần có minh chứng.
+- Code, commit, tên lớp và biến bằng tiếng Anh. Hướng dẫn sử dụng, giao diện và tài liệu học thuật bằng tiếng Việt. Tuân thủ cùng hợp đồng API và bộ dữ liệu thử trong repo.
+
 > **Tài liệu ngữ cảnh và chỉ dẫn dành cho AI Agents (Context & Agent Instructions)**  
 > **Đồng bộ ngày 14/10/2026 (Asia/Saigon).** Trạng thái dưới đây dựa trên tài liệu lưu trong workspace; việc trình bày, nộp bài và duyệt cần có bằng chứng riêng.
 

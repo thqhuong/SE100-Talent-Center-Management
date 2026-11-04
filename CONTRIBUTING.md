@@ -1,31 +1,35 @@
-# Contributing to SE100 Talent Center Management
+# Gửi thay đổi cho nhóm SE100
 
-Chào mừng bạn đến với repo Đồ án môn học **SE100 — Phương pháp phát triển phần mềm hướng đối tượng**.
+Bắt đầu từ thư mục repo và bảo đảm đã lưu các việc đang làm trên nhánh riêng. Trước khi nhận việc mới:
 
----
+```powershell
+git switch develop
+git pull --ff-only
+git switch -c feat/student-schedule
+```
 
-## 👥 Phân công & Quy chế làm việc nhóm
+Đổi `feat/student-schedule` thành tên ngắn mô tả việc bạn nhận. Ví dụ `feat/makeup-options`, `test/late-leave-entry` hoặc `docs/class-diagram`.
 
-- Mọi thành viên tuân thủ phân công công việc từ Trưởng nhóm (**Trần Hữu Quốc Hướng**).
-- Mỗi chức năng hoặc tài liệu phân tích do một thành viên phụ trách chính (Owner), tự kiểm tra tính nhất quán với tài liệu Đợt 1 trước khi gửi review.
-- Sử dụng **Mermaid.js** và **StarUML** để biểu diễn sơ đồ hướng đối tượng (Use Case, Sequence, Activity, Class).
+## Làm theo một ví dụ có sẵn
 
----
+Mở màn lịch bằng tài khoản An và xem yêu cầu `GET /api/v1/me/schedule` trong thẻ Network của trình duyệt. Mở phần gọi API trong `project/frontend/src`, tìm đường dẫn tương ứng trong `project/backend/src`, rồi đối chiếu bản ghi lớp và buổi trong `project/backend/prisma`. Khi thêm chức năng, chốt một ví dụ đầu vào, kết quả người dùng nhìn thấy và cách thử khi đăng nhập sai vai trò.
 
-## 🌿 Quy tắc Nhánh (GitFlow)
+Phần giao diện gọi API theo đường dẫn tương đối `/api/v1`. Máy chủ lấy người đang đăng nhập từ cookie phiên để lọc dữ liệu. Đổi vai trò trong giao diện không cấp quyền mới. Khi thay đổi định dạng dữ liệu trả về, cập nhật cả phần sử dụng trên web và báo người phụ trách luồng đó.
 
-- `main`: Nhánh gốc chứa các bản báo cáo chính thức và phiên bản ổn định đã nghiệm thu.
-- `develop`: Nhánh tích hợp cho các đợt báo cáo tiến độ và mã nguồn.
-- Nhánh công việc:
-  - `docs/<ten-tai-lieu>`
-  - `feat/<ten-chuc-nang>`
-  - `fix/<loi-nghiep-vu>`
+Hướng phụ trách nền tảng, tài khoản và bản tích hợp. Khang chịu trách nhiệm lịch, chỗ học, ghi danh và thu phí. Huy chịu trách nhiệm giáo trình, buổi học, chuyên cần, tiến bộ và học bù. Công việc của Hoàng, Quý, Đại dùng dữ liệu hoặc giao diện đã thống nhất để có thể thực hiện song song.
 
----
+## Trước khi gửi
 
-## 📝 Quy ước Commit (Conventional Commits)
+1. Chạy thử việc của mình trên Docker bằng dữ liệu chung. Ghi lại tài khoản, thao tác và kết quả để người khác thử lại.
+2. Kiểm tra danh sách tệp bằng `git status --short`. Chỉ chọn những tệp thuộc công việc. Ví dụ dưới đây dùng cho một thay đổi giao diện.
 
-- `docs(report): ...` (Báo cáo tiến độ, đặc tả yêu cầu, thiết kế UML)
-- `feat(ui): ...` (Giao diện wireframe/prototype)
-- `feat(backend): ...` (Logic backend, kết nối cơ sở dữ liệu)
-- `ci: ...` (Quy trình CI/CD và công cụ kho)
+```powershell
+git add project/frontend/src
+git commit -m "feat: show student schedule"
+git push -u origin HEAD
+```
+
+3. Trên GitHub tạo pull request vào **develop**. Ghi thay đổi có ích gì, cách thử và link minh chứng. Nhờ một người liên quan xem lại. Luồng kiểm tra tự động khởi động ứng dụng với PostgreSQL và thử quyền của hai học viên.
+4. Dán link pull request vào phiếu của bạn. Khi kiểm tra đạt và nhóm đã xem, tích hợp vào `develop`. Nhánh `main` dành cho bản ổn định của nhóm.
+
+Khi có thay đổi cấu trúc bảng, thêm migration vào kho cùng code. Dùng một cơ sở dữ liệu phát triển riêng để tạo migration. Quy trình clone mặc định chỉ áp dụng migration đã có và nạp dữ liệu mẫu theo mã cố định.

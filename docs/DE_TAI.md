@@ -1,5 +1,7 @@
 # Đề tài SE100: Phần mềm quản lý trung tâm dạy năng khiếu
 
+> Phạm vi triển khai ngày 04/11 tập trung vào một trung tâm âm nhạc, lớp tại trung tâm và lớp online, giáo trình từng buổi và tài khoản học viên. Đọc [nền dùng chung](./planning/2026-11-04/FOUNDATION_BLUEPRINT.md), [phân công](./planning/2026-11-04/README.md) và [hướng dẫn chạy](../README.md). Nội dung theo ngày 14/10 dưới đây ghi lại giai đoạn phân tích trước.
+
 > **Đồng bộ ngày 14/10/2026 (Asia/Saigon).** Phạm vi dưới đây là phương án phân tích trong báo cáo cục bộ, cần được nhóm và đại diện trung tâm rà soát. Hồ sơ hiện có chưa chứng minh đã khảo sát thực tế, trình bày/nộp báo cáo hoặc được giảng viên duyệt.
 
 ## Phạm vi đề xuất ngày 14/10/2026
